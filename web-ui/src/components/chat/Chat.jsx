@@ -12,6 +12,7 @@ import SignIn from './SignIn';
 import './Chat.css';
 
 class Chat extends Component {
+	
   constructor() {
     super ();
     this.state = {
@@ -20,7 +21,9 @@ class Chat extends Component {
       username: '',
       message: '',
       messages: [],
-      connection: null
+      connection: null,
+	   selectedFile: null
+	   
     }
     this.chatRef = React.createRef();
     this.messagesEndRef = React.createRef();
@@ -70,7 +73,7 @@ class Chat extends Component {
   updateUsername = username => {
     this.setState({ username, showSignIn: false }, () => this.chatRef.current.focus());
   }
-
+  
   handleOnClick = () => {
     const { username } = this.state;
     if (!username) {
@@ -81,7 +84,7 @@ class Chat extends Component {
   handleChange = e => {
     this.setState({ message: e.target.value })
   }
-
+ 
   handleKeyDown = (e) => {
     if (e.keyCode === 13) { // keyCode 13 is carriage return
       const { username, message, connection } = this.state;
@@ -128,11 +131,11 @@ class Chat extends Component {
   }
 
   render() {
-    const { username, message, showSignIn } = this.state;
+    const { username, message, showSignIn} = this.state;
     return (
       <React.Fragment>
         <header>
-          <h1>Simple Live Chat demo</h1>
+          <h1>Chat App</h1>
         </header>
         <div className="main full-width full-height chat-container">
           <div className="content-wrapper mg-2">
@@ -144,19 +147,22 @@ class Chat extends Component {
                   <div ref={this.messagesEndRef} />
                 </div>
                 <div className="composer">
-                  <input 
+					 <input 
                     ref={this.chatRef}
                     className={`rounded ${!username ? 'hidden' : ''}`} 
                     type="text" 
-                    placeholder="Say something"
+                    placeholder="Type Message"
                     value={message}
-                    maxLength={510}
+                    maxLength={1000}
                     onChange={this.handleChange}
                     onKeyDown={this.handleKeyDown}
-                  />
+					/>
                   {!username && (
                     <fieldset>
-                      <button onClick={this.handleOnClick} className="btn btn--primary full-width rounded">Click to send messages</button>
+                      <button onClick={this.handleOnClick} className="btn btn--primary full-width rounded">SEND MESSAGE</button>
+					  <div> 
+                
+            </div> 
                     </fieldset>
                   )}
                 </div>

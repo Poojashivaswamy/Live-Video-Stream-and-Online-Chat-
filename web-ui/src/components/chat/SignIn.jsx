@@ -30,7 +30,7 @@ class SignIn extends Component {
     return (
       <div className="modal pos-absolute top-0 bottom-0">
         <div className="modal__el">
-          <h1 className="mg-b-2">Enter your name</h1>
+          <h1 className="mg-b-2">Login</h1>
           <form>
             <fieldset>
               <input 
@@ -39,7 +39,7 @@ class SignIn extends Component {
                 ref={this.inputRef}
                 type="text" 
                 className="rounded" 
-                placeholder="Type here..." 
+                placeholder="Enter Name" 
                 autoComplete="off" 
                 value={username} 
                 onChange={this.handleNameChange}
@@ -48,7 +48,7 @@ class SignIn extends Component {
                 onClick={this.handleStartChatting} 
                 className="btn btn--primary rounded mg-t-1"
                 disabled={!username}
-              >Start chatting</button>
+              >Login</button>
             </fieldset>
           </form>
         </div>

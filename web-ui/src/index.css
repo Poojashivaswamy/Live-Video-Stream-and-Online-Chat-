@@ -2,7 +2,7 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 /* Reset */
-*,*::before,*::after{box-sizing:border-box}ul[class],ol[class]{padding:0}body,h1,h2,h3,h4,p,ul[class],ol[class],figure,blockquote,dl,dd{margin:0}html{scroll-behavior:smooth}body{min-height:100vh;text-rendering:optimizeSpeed;line-height:1.5}ul[class],ol[class]{list-style:none}a:not([class]){text-decoration-skip-ink:auto}img{max-width:100%;display:block}article>*+*{margin-top:1em}input,button,textarea,select{font:inherit}@media (prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}}
+*,*::before,*::after{box-sizing:border-box}ul[class],ol[class]{padding:0}body,h1,h2,h3,h4,p,ul[class],ol[class],figure,blockquote,dl,dd{margin:0}html{scroll-behavior:smooth}body{min-height:100vh;text-rendering:optimizeSpeed;line-height:1.5}ul[class],ol[class]{list-style:none}a:not([class]){text-decoration-skip-ink:auto}img{max-width:10%;display:inline}article>*+*{margin-top:1em}input,button,textarea,select{font:inherit}@media (prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}}
 
 /* --------------------------------------------------------------- */
 /* Variables */
@@ -143,6 +143,7 @@ body {
 body {
   font-family: var(--font-sans);
   font-size: 1.6rem;
+  color: darkviolet;
 }
 
 ::selection {
@@ -161,7 +162,10 @@ section {
 }
 
 h1 {
-  font-size: 3.6rem;
+  font-size: 3.5rem;
+  color: purple;
+  text-align: center;
+  font-weight: bold;
 }
 
 h2 {
@@ -493,9 +497,12 @@ header {
 }
 
 header h1 {
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 26px;
+  font-weight: 1000;
   line-height: var(--header-height);
+  color: purple;
+  font-style: italic;
+  
 }
 
 /* Modal */
@@ -515,7 +522,7 @@ header h1 {
   min-width: var(--modal-min-width);
   position: relative;
   z-index: 2;
-  background: var(--color-bg-modal);
+  background-color: #80DEEA;
   display: flex;
   flex-direction: column;
   padding: 3rem;
@@ -657,13 +664,13 @@ input.rounded {
 }
 
 .btn--primary {
-  background: var(--color-bg-button-primary-default);
+  background: #8E24AA;
   color: var(--color-text-inverted);
 }
 
 .btn--primary:hover,
 .btn--primary:focus {
-  background: var(--color--secondary);
+  background: #00acc1;
 }
 
 .btn--secondary {
@@ -779,6 +786,7 @@ input.rounded {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  background-color: #ffc0cb52;
 }
 
 .chat-line {
@@ -792,6 +800,7 @@ input.rounded {
 .chat-line p {
   display: inline;
   font-weight: normal;
+  color: rebeccapurple;
 }
 
 .chat-line .username {
