@@ -502,7 +502,7 @@ header h1 {
   line-height: var(--header-height);
   color: purple;
   font-style: italic;
-  
+
 }
 
 /* Modal */
@@ -791,7 +791,7 @@ input.rounded {
 
 .chat-line {
   padding: 12px 15px;
-  background: var(--color-bg-chat-bubble);
+  background: transparent;
   border-radius: var(--input-height);
   display: flex;
   margin: 0 0 5px 0;
@@ -800,7 +800,7 @@ input.rounded {
 .chat-line p {
   display: inline;
   font-weight: normal;
-  color: rebeccapurple;
+  color: rgb(157, 86, 228);
 }
 
 .chat-line .username {

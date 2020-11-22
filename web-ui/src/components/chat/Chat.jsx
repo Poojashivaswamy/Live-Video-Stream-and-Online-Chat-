@@ -8,11 +8,14 @@ import * as config from '../../config';
 import VideoPlayer from '../videoPlayer/VideoPlayer';
 import SignIn from './SignIn';
 
+import "emoji-mart/css/emoji-mart.css";
+import { Picker } from "emoji-mart";
+
 // Styles
-import './Chat.css';
+import * as styles from './Chat.css';
 
 class Chat extends Component {
-	
+
   constructor() {
     super ();
     this.state = {
@@ -21,13 +24,34 @@ class Chat extends Component {
       username: '',
       message: '',
       messages: [],
+      showEmojis: false,
       connection: null,
 	   selectedFile: null
-	   
+
     }
     this.chatRef = React.createRef();
     this.messagesEndRef = React.createRef();
   }
+
+  showEmojis = e => {
+    this.setState(
+      {
+        showEmojis: !this.state.showEmojis
+      }
+    );
+  };
+
+  closeMenu = e => {
+    console.log(this.emojiPicker);
+    if (this.emojiPicker !== null && !this.emojiPicker.contains(e.target)) {
+      this.setState(
+        {
+          showEmojis: false
+        },
+        () => document.removeEventListener("click", this.closeMenu)
+      );
+    }
+  };
 
   componentDidMount() {
     const connection = new WebSocket(config.CHAT_WEBSOCKET);
@@ -44,16 +68,18 @@ class Chat extends Component {
     };
 
     connection.onmessage = (event) => {
-      // append received message from the server to the DOM element 
+      // append received message from the server to the DOM element
       const messages = this.state.messages;
       const data = event.data.split('::');
       const username = data[0];
+      const incoming = this.state.username == username ? '' : 'incomingColor';
       const message = data.slice(1).join('::'); // in case the message contains the separator '::'
 
       messages.push({
         timestamp: Date.now(),
         username,
-        message
+        message,
+        incoming
       });
 
       this.setState({ messages });
@@ -63,7 +89,7 @@ class Chat extends Component {
   }
 
   componentDidUpdate() {
-    this.scrollToBottom();
+    //this.scrollToBottom();
   }
 
   scrollToBottom = () => {
@@ -73,7 +99,7 @@ class Chat extends Component {
   updateUsername = username => {
     this.setState({ username, showSignIn: false }, () => this.chatRef.current.focus());
   }
-  
+
   handleOnClick = () => {
     const { username } = this.state;
     if (!username) {
@@ -84,7 +110,7 @@ class Chat extends Component {
   handleChange = e => {
     this.setState({ message: e.target.value })
   }
- 
+
   handleKeyDown = (e) => {
     if (e.keyCode === 13) { // keyCode 13 is carriage return
       const { username, message, connection } = this.state;
@@ -94,8 +120,9 @@ class Chat extends Component {
           "data": "${username}::${message.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"
         }`;
         connection.send(data);
-        
+
         this.setState({ message: '' });
+        this.state.showEmojis && this.showEmojis();
       }
     }
   }
@@ -111,7 +138,15 @@ class Chat extends Component {
     });
     return formattedMessage;
   }
-  
+
+  addEmoji = e => {
+    console.log(e);
+    let emoji = e.native;
+    this.setState({
+      message: this.state.message + emoji
+    });
+  };
+
   renderMessages = () => {
     const { messages } = this.state;
     return (
@@ -119,7 +154,7 @@ class Chat extends Component {
         let formattedMessage = this.parseUrls(message.message);
         return (
           <div className="chat-line" key={message.timestamp}>
-            <p><span className="username">{message.username}</span><span dangerouslySetInnerHTML={{__html: formattedMessage}} /></p>
+            <p><span className={`username ${message.incoming}`}>{message.username}</span><span dangerouslySetInnerHTML={{__html: formattedMessage}} /></p>
           </div>
         )
       })
@@ -133,47 +168,92 @@ class Chat extends Component {
   render() {
     const { username, message, showSignIn} = this.state;
     return (
-      <React.Fragment>
-        <header>
-          <h1>Chat App</h1>
-        </header>
-        <div className="main full-width full-height chat-container">
-          <div className="content-wrapper mg-2">
-          <VideoPlayer setMetadataId={this.setMetadataId} videoStream={config.PLAYBACK_URL} />
-            <div className="col-wrapper">
-              <div className="chat-wrapper pos-absolute pd-t-1 top-0 bottom-0">
-                <div className="messages">
-                  {this.renderMessages()}
-                  <div ref={this.messagesEndRef} />
-                </div>
-                <div className="composer">
-					 <input 
-                    ref={this.chatRef}
-                    className={`rounded ${!username ? 'hidden' : ''}`} 
-                    type="text" 
-                    placeholder="Type Message"
-                    value={message}
-                    maxLength={1000}
-                    onChange={this.handleChange}
-                    onKeyDown={this.handleKeyDown}
-					/>
-                  {!username && (
-                    <fieldset>
-                      <button onClick={this.handleOnClick} className="btn btn--primary full-width rounded">SEND MESSAGE</button>
-					  <div> 
-                
-            </div> 
-                    </fieldset>
-                  )}
-                </div>
-              </div>
-            </div>
+      // <div>
+      //   <div className="main full-width full-height chat-container">
+      //     <div className="content-wrapper mg-2">
+      //       <VideoPlayer setMetadataId={this.setMetadataId} videoStream={config.PLAYBACK_URL} />
+      //       <div className="col-wrapper">
+      //         <div className="chat-wrapper pos-absolute pd-t-1 top-0 bottom-0">
+      //           <div className="messages">
+      //             {this.renderMessages()}
+      //             <div ref={this.messagesEndRef}></div>
+      //           </div>
+      //           <div className="composer">
+			// 		        <input
+      //             ref={this.chatRef}
+      //             className={`rounded ${!username ? 'hidden' : ''}`}
+      //             type="text"
+      //             placeholder="Type Message"
+      //             value={message}
+      //             maxLength={1000}
+      //             onChange={this.handleChange}
+      //             onKeyDown={this.handleKeyDown}/>
+      //             {!username && (
+      //               <fieldset>
+      //                 <button onClick={this.handleOnClick} className="btn btn--primary full-width rounded">SEND MESSAGE</button>
+      //               </fieldset>
+      //             )}
+      //           </div>
+      //         </div>
+      //       </div>
+      //     </div>
+      //   </div>
+      //   {showSignIn &&
+      //     <SignIn updateUsername={this.updateUsername} />
+      //   }
+      //   {/* <div style={{ color: "red" }}>{errors}</div> */}
+      //   {this.state.showEmojis ? (
+      //     <span style={styles.emojiPicker} ref={el => (this.emojiPicker = el)}>
+      //       <Picker
+      //         onSelect={this.addEmoji}
+      //         emojiTooltip={true}
+      //         title="weChat"
+      //       />
+      //     </span>
+      //   ) : (
+      //     <p style={styles.getEmojiButton} onClick={this.showEmojis}>
+      //       {String.fromCodePoint(0x1f60a)}
+      //     </p>
+      //   )}
+      // </div>
+      <div className="relPos">
+        <VideoPlayer setMetadataId={this.setMetadataId} videoStream={config.PLAYBACK_URL} />
+        <div className="absolutePositioned chatContainer">
+          <input
+          ref={this.chatRef}
+          className={`rounded ${!username ? 'hidden' : ''} darkInput`}
+          type="text"
+          placeholder="Type Message"
+          value={message}
+          maxLength={1000}
+          onChange={this.handleChange}
+          onKeyDown={this.handleKeyDown}/>
+          {username && (<span className="inlineEmoji" style={styles.getEmojiButton} onClick={this.showEmojis}>
+            {String.fromCodePoint(0x1f60a)}
+          </span>)}
+          {!username && (
+              <button onClick={this.handleOnClick} className="btn btn--primary centered">SEND MESSAGE</button>
+          )}
+          {/* <div style={{ color: "red" }}>{errors}</div> */}
+          {this.state.showEmojis && (
+            <span style={styles.emojiPicker} ref={el => (this.emojiPicker = el)}>
+              <Picker
+                onSelect={this.addEmoji}
+                emojiTooltip={true}
+                title="weChat"
+                style={{position: 'fixed', bottom: '60px', right: '0px'}}
+              />
+            </span>
+          )}
+          <div className="messages">
+            {this.renderMessages()}
+            <div ref={this.messagesEndRef}></div>
           </div>
-          {showSignIn && 
-            <SignIn updateUsername={this.updateUsername} />
-          }
         </div>
-      </React.Fragment>
+        {showSignIn &&
+          <SignIn updateUsername={this.updateUsername} />
+        }
+      </div>
     )
   }
 }
